@@ -1,33 +1,34 @@
-CFLAGS=$(shell pkg-config --cflags gtk+-2.0 glib) $(shell pkg-config --cflags glib-2.0)
+ROOT=root
+BINDIR=/usr/bin
+CFLAGS=$(RPM_OPT_FLAGS) $(shell pkg-config --cflags gtk+-2.0) $(shell pkg-config --cflags glib-2.0)
 LDFLAGS=$(shell pkg-config --libs gtk+-2.0) $(shell pkg-config --libs glib-2.0)
 
-all:
-	@make clean
-	mkdir build
-	
-	gcc src/nvdock.c -c -o build/nvdock.o ${CFLAGS}
-	gcc src/icon.c -c -o build/icon.o ${CFLAGS}
-	gcc src/util.c -c -o build/util.o ${CFLAGS}
-	
-	gcc build/nvdock.o build/icon.o build/util.o -o build/nvdock ${LDFLAGS}
-	
-	strip --strip-unneeded build/nvdock
+all: nvdock
+
+nvdock: nvdock.o icon.o util.o 
+	$(CC) $(CFLAGS) nvdock.o icon.o util.o -o nvdock $(LDFLAGS)
+
+nvdock.o: src/nvdock.c src/nvdock.h
+	$(CC) $(CFLAGS) -Isrc -c src/nvdock.c
+
+icon.o: src/icon.h src/icon.c
+	$(CC) $(CFLAGS) -Isrc -c src/icon.c
+
+util.o: src/util.c
+	$(CC) $(CFLAGS) -Isrc -c src/util.c 
 
 install:
-	cp build/nvdock /usr/bin
-	chmod 755 /usr/bin/nvdock
-	
-	cp data/nvdock.png /usr/share/pixmaps
-	chmod 644 /usr/share/pixmaps/nvdock.png
-	
-	cp data/nvdock.desktop /usr/share/applications
-	chmod 644 /usr/share/pixmaps/nvdock.png
+	mkdir -p $(DESTDIR)$(BINDIR)
+	$(INSTALL) -o $(ROOT) -g $(ROOT) -m 755 nvdock \
+		$(DESTDIR)$(BINDIR)/nvdock
+
+	mkdir -p $(DESTDIR)/usr/share/pixmaps
+	$(INSTALL) -o $(ROOT) -g $(ROOT) -m 644 data/nvdock.png \
+		$(DESTDIR)/usr/share/pixmaps
+
+	mkdir -p $(DESTDIR)/usr/share/applications
+	$(INSTALL) -o $(ROOT) -g $(ROOT) -m 644 data/nvdock.desktop \
+		$(DESTDIR)/usr/share/applications
 
 clean:
-	@rm -rf build
-	
-uninstall:
-	rm -f /usr/bin/nvdock
-	rm -f /usr/share/pixmaps/nvdock.png
-	rm -f /usr/share/applications/nvdock.png
-
+	rm -f nvdock *.o
