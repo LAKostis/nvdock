@@ -1,0 +1,24 @@
+name: nvDock
+files: file:///home/code/repo/nvdock/src/nvdock.h
+files: file:///home/code/repo/nvdock/src/nvdock.c
+files: file:///home/code/repo/nvdock/src/icon.h
+files: file:///home/code/repo/nvdock/src/icon.c
+files: file:///home/code/repo/nvdock/src/util.c
+files: file:///home/code/repo/nvdock/COPYING
+basedir: file:///home/code/repo/nvdock/src/
+webdir: 
+template: 
+word_wrap: 0
+recent_files: file:///home/code/repo/nvdock/COPYING
+opendir: file:///home/code/repo/nvdock
+savedir: file:///home/code/repo/nvdock/src
+adv_open_matchname: 0
+adv_open_recursive: 0
+last_filefilter: 
+view_main_toolbar: 1
+view_left_panel: 0
+fb_show_hidden_f: 0
+fb_show_backup_f: 0
+fb_focus_follow: 0
+bookmarks_filename_mode: 0
+spell_default_lang: en
