@@ -33,15 +33,15 @@ The NVIDIA name and Logo are property of NVIDIA.
 
 #include "nvdock.h"
 
-argstruct *
+void
 argc_argv_parse(int argc, char **argv) {
 
 	//. this function requires the typedef struct _argc_argv, which has been
 	//. placed in nvdock.h for this application.
+       argstruct *arg = (argstruct *)malloc(sizeof(argstruct));
 
 	int a = 1;
-	argstruct *arg = (argstruct *)malloc(sizeof(argstruct));
-	
+        
 	arg->version = 0;
 	arg->help = 0;
 	arg->unknown = 0;
@@ -78,8 +78,6 @@ argc_argv_parse(int argc, char **argv) {
 		
 		++a;
 	}	
-
-	return arg;
 }
 
 int

@@ -40,7 +40,11 @@ bob_main_quit(void) {
 	return;
 }
 
-int main(int argc, char *argv) {
+int main(int argc, char **argv) {
+
+        extern BobStatusIcon *bsi;
+        extern argstruct *arg;
+        arg = (argstruct *)malloc(sizeof(argstruct));
 
 	if(!exists_application("cut") || !exists_application("grep")) {
 		puts("error: make sure `cut` and `grep` are installed.");
@@ -58,8 +62,8 @@ int main(int argc, char *argv) {
 	}
 	
 	unsigned int pid = 0;
-	
-	arg = (argstruct *)argc_argv_parse(argc,argv);
+
+	argc_argv_parse(argc,argv);
 
 	//. more preliminary checks.
 	arg->has_nvclock = exists_application("nvclock");

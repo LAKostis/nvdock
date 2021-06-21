@@ -70,6 +70,9 @@ BobMenuItemDef menuItemDef[] = {
 	{ 9, BOB_MENU_ICON, "Quit", "", "gtk-quit", -1, TRUE, bob_main_quit }
 };
 
+argstruct *arg;
+BobStatusIcon *bsi;
+
 #define BOB_NVTEMP_ITEM 2
 #define BOB_NVCLOCK_ITEM 5
 #define BOB_NVVERSION_ITEM 10

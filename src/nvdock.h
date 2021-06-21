@@ -79,12 +79,11 @@ typedef struct _argc_argv {
 	gboolean has_nvclock:1;
 	gboolean has_nvclock_gtk:1;
 	
-	unsigned char nvversion[32];
+	char nvversion[32];
 
 } argstruct;
 
-argstruct *arg;
-BobStatusIcon *bsi;
+void argc_argv_parse(int argc, char **argv);
 
 gboolean exists_application(const char *);
 gboolean exists_icon_file(const char *);
