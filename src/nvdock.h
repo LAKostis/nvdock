@@ -83,6 +83,8 @@ typedef struct _argc_argv {
 
 } argstruct;
 
+extern argstruct *arg;
+extern BobStatusIcon *bsi;
 void argc_argv_parse(int argc, char **argv);
 
 gboolean exists_application(const char *);

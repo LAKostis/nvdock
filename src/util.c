@@ -38,7 +38,7 @@ argc_argv_parse(int argc, char **argv) {
 
 	//. this function requires the typedef struct _argc_argv, which has been
 	//. placed in nvdock.h for this application.
-       argstruct *arg = (argstruct *)malloc(sizeof(argstruct));
+	arg = (argstruct *)malloc(sizeof(argstruct));
 
 	int a = 1;
         

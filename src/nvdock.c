@@ -42,10 +42,6 @@ bob_main_quit(void) {
 
 int main(int argc, char **argv) {
 
-        extern BobStatusIcon *bsi;
-        extern argstruct *arg;
-        arg = (argstruct *)malloc(sizeof(argstruct));
-
 	if(!exists_application("cut") || !exists_application("grep")) {
 		puts("error: make sure `cut` and `grep` are installed.");
 		return 4;	
