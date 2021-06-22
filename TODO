@@ -1,1 +1,2 @@
-got anything? bob@kateos.org.
+- libNVCntrl support (and get rid of grep/sed/which calls)
+
