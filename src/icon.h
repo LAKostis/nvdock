@@ -71,6 +71,8 @@ BobMenuItemDef menuItemDef[] = {
 
 argstruct *arg;
 BobStatusIcon *bsi;
+t_nvfeature *feature;
+int *num_gpus;
 
 #define BOB_NVTEMP_ITEM 2
 #define BOB_NVCLOCK_ITEM 5

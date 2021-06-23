@@ -29,30 +29,9 @@ Display *nvidia_display;
 
 #define ZERO_KELVIN -273 /*.15 */
 
-typedef struct {
-    /* GPU name */
-    gchar *name;
-    /* underlying device */
-    gchar *devicename;
-} t_nvfeature;
-
-/* -------------------------------------------------------------------------- */
-gboolean
-is_nvidia(int idx_gpu)
-{
-    gboolean result = FALSE;
-
-    if (XNVCTRLIsNvScreen (nvidia_display,
-               idx_gpu)) {
-    return TRUE;
-    }
-
-    return result;
-}
-
 /* -------------------------------------------------------------------------- */
 double
-get_nvidia_value (int idx_gpu)
+get_nvidia_temp (int idx_gpu)
 {
     int temperature = 0;
     double result = ZERO_KELVIN;
@@ -91,13 +70,14 @@ get_nvidia_version(int idx_gpu)
 }
 
 /* -------------------------------------------------------------------------- */
-static int
+int
 read_gpus (void)
 {
-    t_nvfeature *feature;
-    int num_gpus = 0;
+    int found = 0;
     int event, error;
     int idx_gpu;
+
+    feature = (t_nvfeature *)malloc(sizeof(t_nvfeature));
 
     /* create the connection to the X server */
     nvidia_display = XOpenDisplay (NULL);
@@ -108,11 +88,11 @@ read_gpus (void)
         if (XNVCTRLQueryExtension (nvidia_display, &event, &error)) {
             XNVCTRLQueryTargetCount (nvidia_display,
                 NV_CTRL_TARGET_TYPE_GPU,
-                &num_gpus);
+                &found);
         }
     }
 
-    for (idx_gpu = 0; idx_gpu < num_gpus; idx_gpu++) {
+    for (idx_gpu = 0; idx_gpu < found; idx_gpu++) {
         gchar* gpuname = NULL; /* allocated by libxnvctrl */
         feature = g_new0 (t_nvfeature, 1);
 
@@ -132,5 +112,5 @@ read_gpus (void)
         feature->name = g_strdup (feature->devicename);
     }
 
-    return num_gpus;
+    return found;
 }

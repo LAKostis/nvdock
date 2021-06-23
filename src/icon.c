@@ -53,7 +53,7 @@ bob_status_icon_new(BobStatusIcon *s, int tooltip_interval) {
 		s
 	);
 
-	if(get_nvidia_value(0)) {
+	if(get_nvidia_temp(0)) {
 		g_timeout_add(
 			(tooltip_interval * 1000),
 			(GSourceFunc)&bob_status_icon_on_tooltip_interval,
@@ -87,25 +87,24 @@ bob_status_icon_on_activate(void) {
 void
 bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 
-	unsigned char nvtemp, verlen;
 	char nvtempstring[255],nvversion[255];
 	GtkWidget *menu, *item;
 	menu = gtk_menu_new();
-	int a;
-
-	int count = 10;
-
 	void *temp;
+	int a, idx_gpu;
+	double nvtemp;
 
-	//. read/format the temperature.
-	nvtemp = get_nvidia_value(0);
-	if(nvtemp) {
-		snprintf(
-			nvtempstring, 255,
-			"GPU Temp: %d°",
-			nvtemp
-		);
-
+	num_gpus = read_gpus();
+	for (idx_gpu = 0; idx_gpu < num_gpus; idx_gpu++) {
+        	//. read/format the temperature.
+        	nvtemp = get_nvidia_temp(idx_gpu);
+        	if(nvtemp) {
+        		snprintf(
+        			nvtempstring, 255,
+        			"%d: %s Temp: %.2f°\n",
+        			idx_gpu,feature->name,nvtemp
+        		);
+		}
 		bob_status_icon_update_tooltip(nvtempstring);
 	}
 
@@ -230,24 +229,21 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 void
 bob_status_icon_on_tooltip_interval(void) {
 
-	int nvtemp;
+	int nvtemp, idx_gpu;
 	char string[255];
 
-	nvtemp = get_nvidia_value(0);
-
-	if(nvtemp) {
-		snprintf(
-			string, 255,
-			"GPU Temp: %d°",
-			get_nvidia_value(0)
-		);
-	} else {
-		snprintf(
-			string, 255,
-			"NVIDIA Dock"
-		);
+	num_gpus = read_gpus();
+	for (idx_gpu = 0; idx_gpu < num_gpus; idx_gpu++) {
+        	//. read/format the temperature.
+        	nvtemp = get_nvidia_temp(idx_gpu);
+        	if(nvtemp) {
+        		snprintf(
+        			string, 255,
+        			"%d: %s Temp: %.2f°\n",
+        			idx_gpu,feature->name,nvtemp
+        		);
+		}
 	}
-
 	bob_status_icon_update_tooltip(string);
 
 	return;

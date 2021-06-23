@@ -15,6 +15,7 @@ ChangeLog Legend:
         % Use NVCtrlLib for temperature and version reading. Use code from
 	  xfce4-sensors. At least we have a recommended way to read values directly
 	  from X11.
+	% Supports Multiple GPUs.
 	& Fix compilation with recent GCC (-fno-common).
 	& Rewrite Makefile to make it distribution-friendly.
 	! Fix vars usage and segfaults.

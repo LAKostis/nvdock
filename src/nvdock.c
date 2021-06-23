@@ -75,6 +75,13 @@ int main(int argc, char **argv) {
 		return 0;
 	}
 
+	int num_gpus = 0;
+	num_gpus = read_gpus();
+	if(num_gpus == 0) {
+		puts("No NVIDIA GPUs detected, quitting.");
+		return 1;
+	}
+
 	if(arg->fork) {
 		if((pid = fork()) < 0) {
 			puts("unable to fork, quitting.");
@@ -104,6 +111,7 @@ int main(int argc, char **argv) {
 	}
 
 	free(arg);
+	free(feature);
 
 	return 0;
 }

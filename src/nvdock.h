@@ -81,13 +81,23 @@ typedef struct _argc_argv {
 
 } argstruct;
 
+typedef struct {
+    /* GPU name */
+    gchar *name;
+    /* underlying device */
+    gchar *devicename;
+} t_nvfeature;
+
 extern argstruct *arg;
 extern BobStatusIcon *bsi;
+extern t_nvfeature *feature;
+extern int *num_gpus;
+
 void argc_argv_parse(int argc, char **argv);
 
-gboolean is_nvidia (int idx_gpu);
-double get_nvidia_value (int idx_gpu);
+double get_nvidia_temp (int idx_gpu);
 void get_nvidia_version (int idx_gpu);
+int read_gpus(void);
 
 gboolean exists_application(const char *);
 gboolean exists_icon_file(const char *);
