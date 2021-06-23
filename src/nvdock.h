@@ -90,7 +90,7 @@ typedef struct {
 
 extern argstruct *arg;
 extern BobStatusIcon *bsi;
-extern t_nvfeature *feature;
+extern t_nvfeature *feature[16];
 extern int *num_gpus;
 
 void argc_argv_parse(int argc, char **argv);

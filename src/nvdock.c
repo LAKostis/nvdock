@@ -111,7 +111,6 @@ int main(int argc, char **argv) {
 	}
 
 	free(arg);
-	free(feature);
 
 	return 0;
 }

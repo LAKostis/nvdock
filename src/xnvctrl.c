@@ -77,8 +77,6 @@ read_gpus (void)
     int event, error;
     int idx_gpu;
 
-    feature = (t_nvfeature *)malloc(sizeof(t_nvfeature));
-
     /* create the connection to the X server */
     nvidia_display = XOpenDisplay (NULL);
     if (nvidia_display) {
@@ -94,7 +92,7 @@ read_gpus (void)
 
     for (idx_gpu = 0; idx_gpu < found; idx_gpu++) {
         gchar* gpuname = NULL; /* allocated by libxnvctrl */
-        feature = g_new0 (t_nvfeature, 1);
+        feature[idx_gpu] = g_new0 (t_nvfeature, 1);
 
         if (XNVCTRLQueryTargetStringAttribute (nvidia_display,
                                                NV_CTRL_TARGET_TYPE_GPU,
@@ -103,13 +101,13 @@ read_gpus (void)
                                                NV_CTRL_STRING_PRODUCT_NAME,
                                                &gpuname)) {
             g_assert (gpuname != NULL);
-            feature->devicename = gpuname;  /* "it is the caller's responsibility to free ..." */
+            feature[idx_gpu]->devicename = gpuname;  /* "it is the caller's responsibility to free ..." */
         }
         else
         {
-            feature->devicename = g_strdup_printf ("GPU %d", idx_gpu);
+            feature[idx_gpu]->devicename = g_strdup_printf ("GPU %d", idx_gpu);
         }
-        feature->name = g_strdup (feature->devicename);
+        feature[idx_gpu]->name = g_strdup (feature[idx_gpu]->devicename);
     }
 
     return found;

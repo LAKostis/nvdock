@@ -102,7 +102,7 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
         		snprintf(
         			nvtempstring, 255,
         			"%d: %s Temp: %.2f°\n",
-        			idx_gpu,feature->name,nvtemp
+        			idx_gpu,feature[idx_gpu]->name,nvtemp
         		);
 		}
 		bob_status_icon_update_tooltip(nvtempstring);
@@ -239,8 +239,8 @@ bob_status_icon_on_tooltip_interval(void) {
         	if(nvtemp) {
         		snprintf(
         			string, 255,
-        			"%d: %s Temp: %.2f°\n",
-        			idx_gpu,feature->name,nvtemp
+        			"%d: %s Temp: %.2f°",
+        			idx_gpu,feature[idx_gpu]->name,nvtemp
         		);
 		}
 	}
