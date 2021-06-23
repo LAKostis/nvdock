@@ -12,7 +12,7 @@ are permitted provided that the following conditions are met:
 	* Redistributions in binary form must reproduce the above copyright notice,
 	this list of conditions and the following disclaimer in the documentation
 	and/or other materials provided with the distribution.
-      
+
 	* Neither the name of the organization nor the names of its contributors
 	may be used to endorse or promote products derived from this software
 	without specific prior written permission.
@@ -36,16 +36,11 @@ The NVIDIA name and Logo are property of NVIDIA.
 void
 bob_main_quit(void) {
 	gtk_main_quit();
-	
+
 	return;
 }
 
 int main(int argc, char **argv) {
-
-	if(!exists_application("cut") || !exists_application("grep")) {
-		puts("error: make sure `cut` and `grep` are installed.");
-		return 4;	
-	}
 
 	if(!exists_application("nvidia-settings")) {
 		puts("nvidia settings was not found.");
@@ -56,20 +51,16 @@ int main(int argc, char **argv) {
 		printf("icon file '%s' does not exist.\n",ICON);
 		return 2;
 	}
-	
+
 	unsigned int pid = 0;
 
 	argc_argv_parse(argc,argv);
-
-	//. more preliminary checks.
-	arg->has_nvclock = exists_application("nvclock");
-	arg->has_nvclock_gtk = exists_application("nvclock_gtk");
 
 	if(arg->version) {
 		printf(VERSION_PRINTF,VERSION);
 		return 0;
 	}
-	
+
 	if(arg->help) {
 		if(arg->unknown) {
 			puts("error: unknown options found.\n");
@@ -93,26 +84,26 @@ int main(int argc, char **argv) {
 
 	if(pid == 0) {
 		gtk_init(NULL,NULL);
-		
+
 		BobStatusIcon s;
 		bsi = &s;
 
-		read_nvidia_version(arg->nvversion);
-		
+		get_nvidia_version(0);
+
 		bob_status_icon_new(&s,30);
-		
+
 		if(!arg->skip_load) {
 			bob_status_icon_exec_system(CMD_NVIDIA_LOAD);
-		}		
-		
+		}
+
 		while(gtk_events_pending()) {
 			gtk_main_iteration_do(TRUE);
 		}
-		
+
 		gtk_main();
 	}
-	
+
 	free(arg);
-	
+
 	return 0;
 }

@@ -12,7 +12,7 @@ are permitted provided that the following conditions are met:
 	* Redistributions in binary form must reproduce the above copyright notice,
 	this list of conditions and the following disclaimer in the documentation
 	and/or other materials provided with the distribution.
-      
+
 	* Neither the name of the organization nor the names of its contributors
 	may be used to endorse or promote products derived from this software
 	without specific prior written permission.
@@ -31,6 +31,10 @@ OF SUCH DAMAGE.
 The NVIDIA name and Logo are property of NVIDIA.
 .//*/
 
+/* Enable GNU extensions on systems that have them.  */
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE 1
+#endif
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -39,15 +43,12 @@ The NVIDIA name and Logo are property of NVIDIA.
 #include <glib.h>
 #include <gtk/gtk.h>
 
-#define VERSION "1.02"
+#define VERSION "1.03"
 
 #define CMD_SUFFIX " &> /dev/null &"
-#define CMD_NVCLOCK_GTK "nvclock_gtk"
 #define CMD_NVIDIA_RELOAD "nvidia-settings -load-config-only"
 #define CMD_NVIDIA_SETTINGS "nvidia-settings"
-#define CMD_NVIDIA_TEMP "nvidia-settings -q GPUCoreTemp | grep Attribute | cut -d ' ' -f 6 | cut -d '.' -f 1"
 #define CMD_NVIDIA_LOAD "nvidia-settings -load-config-only"
-#define CMD_NVIDIA_VERSION "nvidia-settings -q NvidiaDriverVersion | grep Attribute | cut -d : -f 3 | cut -d ' ' -f 2"
 #define CMD_WHICH_QUERY "which %s 2> /dev/null"
 
 #define ICON "/usr/share/pixmaps/nvdock.png"
@@ -56,9 +57,9 @@ The NVIDIA name and Logo are property of NVIDIA.
 
 typedef struct _BobStatusIcon {
 	GtkStatusIcon *icon;
-	
+
 	GtkWidget *menu, **item;
-	
+
 	gulong signal_activate;
 	gulong signal_popup_menu;
 
@@ -75,11 +76,8 @@ typedef struct _argc_argv {
 	unsigned char fork:1;
 	unsigned char simple_menu:1;
 	unsigned char skip_load:1;
-	
-	gboolean has_nvclock:1;
-	gboolean has_nvclock_gtk:1;
-	
-	char nvversion[32];
+
+	gchar *nvversion;
 
 } argstruct;
 
@@ -87,12 +85,12 @@ extern argstruct *arg;
 extern BobStatusIcon *bsi;
 void argc_argv_parse(int argc, char **argv);
 
+gboolean is_nvidia (int idx_gpu);
+double get_nvidia_value (int idx_gpu);
+void get_nvidia_version (int idx_gpu);
+
 gboolean exists_application(const char *);
 gboolean exists_icon_file(const char *);
-
-int read_nvidia_temp(void);
-void read_nvidia_version(char *);
-unsigned char bob_clean_string(char *);
 
 void bob_main_quit(void);
 

@@ -12,7 +12,7 @@ are permitted provided that the following conditions are met:
 	* Redistributions in binary form must reproduce the above copyright notice,
 	this list of conditions and the following disclaimer in the documentation
 	and/or other materials provided with the distribution.
-      
+
 	* Neither the name of the organization nor the names of its contributors
 	may be used to endorse or promote products derived from this software
 	without specific prior written permission.
@@ -47,12 +47,12 @@ typedef struct _popup_menu_conf {
 	gboolean clickable;
 
 	void (*callback)();
-	
+
 } BobMenuItemDef;
 
 /*//.
 	All (BOB_MENU_ITEM | BOB_MENU_ICON) that should have no actions should have callback = NULL;
-	All BOB_MENU_HBAR should have empty label, command, icon, and a NULL callback. 
+	All BOB_MENU_HBAR should have empty label, command, icon, and a NULL callback.
 .//*/
 
 BobMenuItemDef menuItemDef[] = {
@@ -61,9 +61,8 @@ BobMenuItemDef menuItemDef[] = {
 	{ 1, BOB_MENU_HBAR, "", "", "", -1, FALSE, NULL },
 	{ 10, BOB_MENU_ITEM, "<nvversion>", "", "", -1, FALSE, NULL },
 	{ 2, BOB_MENU_ITEM, "<nvtemp>", "", "", -1, FALSE, NULL },
-	{ 3, BOB_MENU_HBAR, "", "", "", -1, FALSE, NULL },	
+	{ 3, BOB_MENU_HBAR, "", "", "", -1, FALSE, NULL },
 	{ 4, BOB_MENU_ICON, "NVIDIA Settings...", CMD_NVIDIA_SETTINGS, "gtk-preferences", -1, TRUE, bob_status_icon_exec_system },
-	{ 5, BOB_MENU_ICON, "NVClock", CMD_NVCLOCK_GTK, "gtk-dialog-warning", -1, TRUE, bob_status_icon_exec_system },
 	{ 6, BOB_MENU_HBAR, "", "", "", -1, FALSE, NULL },
 	{ 7, BOB_MENU_ICON, "Reload Settings", CMD_NVIDIA_RELOAD, "gtk-refresh", -1, TRUE, bob_status_icon_exec_system },
 	{ 8, BOB_MENU_HBAR, "", "", "", -1, FALSE, NULL },

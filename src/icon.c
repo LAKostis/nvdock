@@ -12,7 +12,7 @@ are permitted provided that the following conditions are met:
 	* Redistributions in binary form must reproduce the above copyright notice,
 	this list of conditions and the following disclaimer in the documentation
 	and/or other materials provided with the distribution.
-      
+
 	* Neither the name of the organization nor the names of its contributors
 	may be used to endorse or promote products derived from this software
 	without specific prior written permission.
@@ -38,14 +38,14 @@ void
 bob_status_icon_new(BobStatusIcon *s, int tooltip_interval) {
 
 	s->icon = gtk_status_icon_new_from_file(ICON);
-	
+
 	s->signal_activate = g_signal_connect_swapped(
 		G_OBJECT(s->icon),
 		"activate",
 		G_CALLBACK(bob_status_icon_on_activate),
 		s
 	);
-	
+
 	s->signal_popup_menu = g_signal_connect_swapped(
 		G_OBJECT(s->icon),
 		"popup-menu",
@@ -53,13 +53,13 @@ bob_status_icon_new(BobStatusIcon *s, int tooltip_interval) {
 		s
 	);
 
-	if(read_nvidia_temp()) {
+	if(get_nvidia_value(0)) {
 		g_timeout_add(
 			(tooltip_interval * 1000),
 			(GSourceFunc)&bob_status_icon_on_tooltip_interval,
 			s
 		); bob_status_icon_on_tooltip_interval();
-		
+
 		s->tooltip_interval = 30;
 	} else {
 		s->tooltip_interval = 0;
@@ -74,13 +74,13 @@ bob_status_icon_new(BobStatusIcon *s, int tooltip_interval) {
 void
 bob_status_icon_on_activate(void) {
 	unsigned long now = time(NULL);
-	
+
 	if((now - bsi->last_time) < 1) {
 		bob_status_icon_exec_system(CMD_NVIDIA_SETTINGS);
 	}
-	
+
 	bsi->last_time = now;
-	
+
 	return;
 }
 
@@ -92,13 +92,13 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 	GtkWidget *menu, *item;
 	menu = gtk_menu_new();
 	int a;
-	
+
 	int count = 10;
-	
+
 	void *temp;
-	
+
 	//. read/format the temperature.
-	nvtemp = read_nvidia_temp();	
+	nvtemp = get_nvidia_value(0);
 	if(nvtemp) {
 		snprintf(
 			nvtempstring, 255,
@@ -108,18 +108,18 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 
 		bob_status_icon_update_tooltip(nvtempstring);
 	}
-	
+
 	//. format the nvidia version.
 	snprintf(
 		nvversion, 255,
 		"Driver: %s",
 		arg->nvversion
 	);
-	
-	
+
+
 	if(bsi->first_right_click == FALSE) {
 		//. this will free all the menu items and the containment menu from
-		//. the last click.	
+		//. the last click.
 		gtk_widget_destroy(bsi->menu);
 	} else {
 		bsi->first_right_click = FALSE;
@@ -128,26 +128,21 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 	//. if we had not got rid of the old menu every right click would drive RAM
 	//. use higher and higher. i know, i watched it happen. because the menu
 	//. items are added to the menu we can forget their reference here.
-	
+
 	BobMenuItemDef *def;
 	int menusize = (sizeof(menuItemDef) / sizeof(BobMenuItemDef));
 	for(a = 0; a < menusize; a++) {
 		def = &menuItemDef[a];
-	
+
 		if(def->type == BOB_MENU_ICON && arg->simple_menu) {
 			def->type = BOB_MENU_ITEM;
-		}	
-
-		//. special case for not having nvclock				
-		if(def->id == BOB_NVCLOCK_ITEM && !arg->has_nvclock_gtk) {
-			continue;
 		}
-		
+
 		//. normal menu items.
 		switch(def->type) {
 			case(BOB_MENU_ITEM): {
 
-				//. special cases			
+				//. special cases
 				if(def->id == BOB_NVVERSION_ITEM) {
 					strcpy(def->label,nvversion);
 				}
@@ -160,17 +155,17 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 				if(def->callback != NULL) {
 					g_signal_connect_swapped(G_OBJECT(item),"activate",
 						G_CALLBACK(def->callback),def->command);
-				}				
-				
+				}
+
 				gtk_widget_set_sensitive(GTK_WIDGET(item),def->clickable);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 				break;
-			}		
+			}
 
 			//. menu items with icons.
 			case(BOB_MENU_ICON): {
 				item = gtk_image_menu_item_new_with_label(def->label);
-				
+
 				if(def->icon != NULL) {
 					if(def->icon[0] != '/') {
 						gtk_image_menu_item_set_image(
@@ -187,7 +182,7 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 								GTK_IMAGE_MENU_ITEM(item),
 								temp
 							);
-							
+
 							//. GtkImageMenuItem now has the reference so
 							//. we can just forget it.
 							temp = NULL;
@@ -198,23 +193,23 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 				if(def->callback != NULL) {
 					g_signal_connect_swapped(G_OBJECT(item),"activate",
 						G_CALLBACK(def->callback),def->command);
-				}				
-				
+				}
+
 				gtk_widget_set_sensitive(GTK_WIDGET(item),def->clickable);
 				gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 				break;
 			}
-		
+
 			//. menu separator.
 			case(BOB_MENU_HBAR): {
 				item = gtk_separator_menu_item_new();
-				gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);			
+				gtk_menu_shell_append(GTK_MENU_SHELL(menu),item);
 				break;
 			}
 		}
-		
+
 	}
-	
+
 	gtk_widget_show_all(GTK_WIDGET(menu));
 
 	gtk_menu_popup(
@@ -228,7 +223,7 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 
 	//. keeping the menu references.
 	bsi->menu = menu;
-	
+
 	return;
 }
 
@@ -237,24 +232,24 @@ bob_status_icon_on_tooltip_interval(void) {
 
 	int nvtemp;
 	char string[255];
-	
-	nvtemp = read_nvidia_temp();
-	
-	if(nvtemp) {	
+
+	nvtemp = get_nvidia_value(0);
+
+	if(nvtemp) {
 		snprintf(
 			string, 255,
 			"GPU Temp: %d°",
-			read_nvidia_temp()
+			get_nvidia_value(0)
 		);
 	} else {
 		snprintf(
 			string, 255,
 			"NVIDIA Dock"
-		);	
+		);
 	}
-	
+
 	bob_status_icon_update_tooltip(string);
-	
+
 	return;
 }
 
@@ -273,20 +268,20 @@ void bob_status_icon_exec_system(const char *string) {
 		(sizeof(char) * strlen(CMD_SUFFIX)) +
 		1
 	);
-	
+
 	char test[len];
-	
+
 	snprintf(test,len,"%s%s",string,CMD_SUFFIX);
-	
+
 	g_signal_handler_block(G_OBJECT(bsi->icon), bsi->signal_activate);
 	g_signal_handler_block(G_OBJECT(bsi->icon), bsi->signal_popup_menu);
 
 	system(test);
-	
+
 	while(gtk_events_pending()) {
 		gtk_main_iteration_do(TRUE);
 	}
-	
+
 	g_signal_handler_unblock(G_OBJECT(bsi->icon), bsi->signal_activate);
 	g_signal_handler_unblock(G_OBJECT(bsi->icon), bsi->signal_popup_menu);
 
