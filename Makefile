@@ -1,6 +1,6 @@
 ROOT=root
 BINDIR=/usr/bin
-CFLAGS=$(RPM_OPT_FLAGS) $(shell pkg-config --cflags gtk+-2.0) $(shell pkg-config --cflags glib-2.0) -I/usr/include/NVCtrl
+CFLAGS=$(RPM_OPT_FLAGS) -Wno-deprecated-declarations $(shell pkg-config --cflags gtk+-2.0) $(shell pkg-config --cflags glib-2.0) -I/usr/include/NVCtrl
 LDFLAGS=$(shell pkg-config --libs gtk+-2.0) $(shell pkg-config --libs glib-2.0) -lXNVCtrl -lX11 -lXext
 
 all: nvdock
