@@ -1,1 +1,4 @@
-- Hybrid setups
+- Hybrid graphics setups
+- Supports FAN RPMs
+- Use modern gtk/glib
+- Wayland?
