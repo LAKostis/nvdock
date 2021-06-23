@@ -35,38 +35,40 @@ The NVIDIA name and Logo are property of NVIDIA.
 #include "icon.h"
 
 void
-bob_status_icon_new(BobStatusIcon *s, int tooltip_interval) {
+bob_status_icon_new(int tooltip_interval) {
 
-	s->icon = gtk_status_icon_new_from_file(ICON);
+	bsi = g_new0(BobStatusIcon, 1);
 
-	s->signal_activate = g_signal_connect_swapped(
-		G_OBJECT(s->icon),
+	bsi->icon = gtk_status_icon_new_from_file(ICON);
+
+	bsi->signal_activate = g_signal_connect_swapped(
+		G_OBJECT(bsi->icon),
 		"activate",
 		G_CALLBACK(bob_status_icon_on_activate),
-		s
+		bsi
 	);
 
-	s->signal_popup_menu = g_signal_connect_swapped(
-		G_OBJECT(s->icon),
+	bsi->signal_popup_menu = g_signal_connect_swapped(
+		G_OBJECT(bsi->icon),
 		"popup-menu",
 		G_CALLBACK(bob_status_icon_on_popup_menu),
-		s
+		bsi
 	);
 
 	if(get_nvidia_temp(0)) {
 		g_timeout_add(
 			(tooltip_interval * 1000),
 			(GSourceFunc)&bob_status_icon_on_tooltip_interval,
-			s
+			bsi
 		); bob_status_icon_on_tooltip_interval();
 
-		s->tooltip_interval = 30;
+		bsi->tooltip_interval = 30;
 	} else {
-		s->tooltip_interval = 0;
+		bsi->tooltip_interval = 0;
 	}
 
-	s->last_time = 0;
-	s->first_right_click = TRUE;
+	bsi->last_time = 0;
+	bsi->first_right_click = TRUE;
 
 	return;
 }
@@ -92,7 +94,7 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 	menu = gtk_menu_new();
 	void *temp;
 	int a, idx_gpu;
-	double nvtemp;
+	double nvtemp = 0;
 
 	num_gpus = read_gpus();
 	for (idx_gpu = 0; idx_gpu < num_gpus; idx_gpu++) {
@@ -223,13 +225,15 @@ bob_status_icon_on_popup_menu(GtkStatusIcon *icon, guint button, guint when) {
 	//. keeping the menu references.
 	bsi->menu = menu;
 
+	g_free(temp);
 	return;
 }
 
 void
 bob_status_icon_on_tooltip_interval(void) {
 
-	int nvtemp, idx_gpu;
+	int idx_gpu;
+	double nvtemp;
 	char string[255];
 
 	num_gpus = read_gpus();

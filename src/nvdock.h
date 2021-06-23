@@ -89,9 +89,8 @@ typedef struct {
 } t_nvfeature;
 
 extern argstruct *arg;
-extern BobStatusIcon *bsi;
 extern t_nvfeature *feature[16];
-extern int *num_gpus;
+extern int num_gpus;
 
 void argc_argv_parse(int argc, char **argv);
 
@@ -104,7 +103,7 @@ gboolean exists_icon_file(const char *);
 
 void bob_main_quit(void);
 
-void bob_status_icon_new(BobStatusIcon *, int tooltip_interval);
+void bob_status_icon_new(int tooltip_interval);
 void bob_status_icon_on_tooltip_interval(void);
 void bob_status_icon_update_tooltip(const char *);
 void bob_status_icon_exec_system(const char *);

@@ -79,6 +79,7 @@ int main(int argc, char **argv) {
 	num_gpus = read_gpus();
 	if(num_gpus == 0) {
 		puts("No NVIDIA GPUs detected, quitting.");
+		g_free(feature[0]);
 		return 1;
 	}
 
@@ -90,14 +91,12 @@ int main(int argc, char **argv) {
 	}
 
 	if(pid == 0) {
-		gtk_init(NULL,NULL);
 
-		BobStatusIcon s;
-		bsi = &s;
+		gtk_init(NULL,NULL);
 
 		get_nvidia_version(0);
 
-		bob_status_icon_new(&s,30);
+		bob_status_icon_new(30);
 
 		if(!arg->skip_load) {
 			bob_status_icon_exec_system(CMD_NVIDIA_LOAD);
