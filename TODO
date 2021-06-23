@@ -1,4 +1,3 @@
 - Hybrid graphics setups
-- Supports FAN RPMs
-- Use modern gtk/glib
-- Wayland?
+- Supports FAN RPMs readings
+- Use modern gtk/glib (to reduce memory consumption).

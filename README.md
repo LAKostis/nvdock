@@ -6,5 +6,4 @@ Fork of nvdock, a tray icon to easily launch the nvidia-settings control panel
 - Multi GPU support
 
 ## Current limitations comparing to original version
-- Only X11 protocol, no Wayland.
-- Size/memory consumtion is slightly higher (due linked NVCtrlLib library).
+- Only X11 protocol, no Wayland (anyway nvidia-settings won't work with Wayland).
