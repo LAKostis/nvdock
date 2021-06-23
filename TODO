@@ -1,2 +1,1 @@
-- libNVCntrl support (and get rid of grep/sed/which calls)
-
+- Multi GPU setup support

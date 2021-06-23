@@ -1,7 +1,7 @@
 ChangeLog for nvDock.
-Last Updated: 2007-12-04 07:32
+Last Updated: 2021-06-23 11:38
 Tab Width: 5
-Author List: 
+Author List:
 
 ChangeLog Legend:
 	+ Addition
@@ -11,29 +11,40 @@ ChangeLog Legend:
 	& Maintainance
 	# Comment
 
+20210623 :: Repository v1.03 :: LAKostis <lakostis@unsafe.ru>
+        % Use NVCtrlLib for temperature and version reading. Use code from
+	  xfce4-sensors. At least we have a recommended way to read values directly
+	  from X11.
+	& Fix compilation with recent GCC (-fno-common).
+	& Rewrite Makefile to make it distribution-friendly.
+	! Fix vars usage and segfaults.
+	- Remove unsafe system calls and external utils requirements. We can't
+	  rely on grep/sed for version and temperature as output is subject to
+	  change.
+	& Bring project back :)
+
 20071204 :: Repository v1.02 :: Bob Majdak Jr <bob@kateos.org>
 	! Shouldn't zombie a shell anymore.
 
 20071019 :: Repository v1.02 :: Bob Majdak Jr <bob@kateos.org>
 	+ Added the NVIDIA driver version to the menu.
 	! Fixed a problem with the command line option --parent reporting as
-		unrecognized.
+	  unrecognized.
 
 20070901 :: Repository v1.01 Still :: Bob Majdak Jr <bob@kateos.org>
 	+ Added auto loading of the NVIDIA settings on launch, and the --no-load
-		option to stop that. Most people probably want it or will never notice
-		it.
+	  option to stop that. Most people probably want it or will never notice
+	  it.
 
 20070824 :: Repository v1.01 :: Bob Majdak Jr <bob@kateos.org>
 	! Fixed a Segmentation Fault when using the menu more than once if the
-		video card did not have temperature reporting.
+	  video card did not have temperature reporting.
 	+ Launcher for NVClock (GTK) if it exists on the system.
 	+ Menu items with icons.
 	+ Command line option --parent, prevents from forking self into a
-		background process automatically.
+	  background process automatically.
 	+ Command line option --simple-menu, disables menu item icons to run
-		with a slightly less memory use.
+	  with a slightly less memory use.
 
 20070817 :: Initial Release v1.0 :: Bob Majdak Jr <bob@kateos.org>
 	+ Everything.
-
